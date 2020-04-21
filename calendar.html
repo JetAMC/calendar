@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <title>Document</title>
+    <link href="style.css" rel="stylesheet">
+    <script>
+
+        const monthFormatChange = (month) => {
+            var monthString = month.toString();
+            if (month < 10) {
+                monthString = "0" + monthString;
+            }
+            return monthString;
+        };
+
+        $(document).ready(() => {
+            const yearSelect = $("#selectYear");
+
+            for (var year = 1901; year <= 2100; year++) {
+                yearSelect.append("<option value=" + year + ">" + year + "</option>");
+            }
+
+            const monthSelect = $("#selectMonth");
+            var startDate = moment("1901/01/01");
+
+            for (var month = 1; month <= 12; month++) {
+                monthSelect.append("<option value=" + monthFormatChange(month) + ">" + startDate.format("MMMM") + "</option>");
+
+                startDate = startDate.add(1, "month");
+            }
+
+            yearSelect.val(moment().year());
+            monthSelect.val(monthFormatChange(moment().month() + 1));
+        });
+
+        const changeCalendar = () => {
+            $("#daysBlocks").empty();  
+
+            var year = $("#selectYear").val();
+            var month = $("#selectMonth").val();
+            var beginMonth = moment(year + "-" + month + "-01T00:00:00.000Z"); // начинаем отсчет от выбранного года и от выбранного месяца 01 числа, 00:00:00:000
+
+            var daysInMonth = beginMonth.daysInMonth(); // определяем сколько дней в месяце
+ 
+            var firstDay = beginMonth.weekday(); // узнаем какой день недели в выбранном месяце, выбранного года
+            if (firstDay === 0) {
+                firstDay = 7;
+            }
+
+            var weekRow = $('<div class="main-block__row"><div class="main-block__col-sm" id="day1"></div><div class="main-block__col-sm" id="day2"></div><div class="main-block__col-sm" id="day3"></div><div class="main-block__col-sm" id="day4"></div><div class="main-block__col-sm" id="day5"></div><div class="main-block__col-sm" id="day6"></div><div class="main-block__col-sm" id="day7"></div></div>');
+
+            var day = firstDay;
+            var clonedWeekRow = $(weekRow).clone(); 
+
+            for (var j = 1; j <= daysInMonth; j++) {
+                var dayId = "#day" + day; // находим число дня и добавляем к id (оно от 0 до 7)
+                var daysDiv = $(dayId, clonedWeekRow); 
+                daysDiv[0].innerText = j; 
+
+                if (year === moment().format("YYYY") && month === moment().format("MM") && daysDiv[0].innerText === moment().format("D")) {
+                    $(daysDiv).addClass("active");
+                }
+
+                if (day === 7 || j === daysInMonth) {
+                    $("#daysBlocks").append(clonedWeekRow);
+                    day = 0;
+                    clonedWeekRow = $(weekRow).clone(); 
+                }
+                day++;
+            }
+        };
+
+    </script>
+</head>
+
+<body>
+    <div class="main-block">
+        <div class="main-block__container">
+            <div class="main-block__calendar-area">
+                <div class="main-block__date-time">
+                    <div id="main-block__big-clock"></div>
+                    <div id="main-block__big-date"></div>
+                </div>
+                <div class="main-block__calendar">
+                    <div class="main-block__month-title">
+                        <div id="main-block__small-date">
+                            <Select id="selectMonth"></Select>
+                            <select id="selectYear"></select>
+                            <button id="setMonthAndYear" onclick="changeCalendar();">Set month and year</button>
+                        </div>
+                    </div>
+                    <div class="main-block__row">
+                        <div class="main-block__col-sm week-name">Mo</div>
+                        <div class="main-block__col-sm week-name">Tu</div>
+                        <div class="main-block__col-sm week-name">We</div>
+                        <div class="main-block__col-sm week-name">Th</div>
+                        <div class="main-block__col-sm week-name">Fr</div>
+                        <div class="main-block__col-sm week-name">Sa</div>
+                        <div class="main-block__col-sm week-name">Su</div>
+                    </div>
+                    <div id="daysBlocks">
+
+                    </div>
+                    <!-- <div class="main-block__row">
+                        <div class="main-block__col-sm previous-month">29</div>
+                        <div class="main-block__col-sm previous-month">30</div>
+                        <div class="main-block__col-sm previous-month">31</div>
+                        <div class="main-block__col-sm">1</div>
+                        <div class="main-block__col-sm">2</div>
+                        <div class="main-block__col-sm">3</div>
+                        <div class="main-block__col-sm">4</div>
+                    </div>
+                    <div class="main-block__row">
+                        <div class="main-block__col-sm">5</div>
+                        <div class="main-block__col-sm">6</div>
+                        <div class="main-block__col-sm">7</div>
+                        <div class="main-block__col-sm">8</div>
+                        <div class="main-block__col-sm">9</div>
+                        <div class="main-block__col-sm active"><div class="currentDay">10</div></div>
+                        <div class="main-block__col-sm">11</div>
+                    </div>
+                    <div class="main-block__row">
+                        <div class="main-block__col-sm">26</div>
+                        <div class="main-block__col-sm">27</div>
+                        <div class="main-block__col-sm">28</div>
+                        <div class="main-block__col-sm">29</div>
+                        <div class="main-block__col-sm">30</div>
+                        <div class="main-block__col-sm next-month">1</div>
+                        <div class="main-block__col-sm next-month">2</div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const time = () => {
+            var liveTime = moment().format('h:mm:ss A');
+
+            const showTime = document.getElementById("main-block__big-clock");
+            showTime.innerText = liveTime;
+        }
+        setInterval(time, 1000);
+
+        var date = moment().format('dddd, MMMM D, YYYY');
+
+        const showDate = document.getElementById("main-block__big-date");
+        showDate.innerText = date;
+
+        // const smallDate = moment().format('MMMM YYYY');
+
+        // const showSmallDate = document.getElementById("main-block__small-date");
+        // showSmallDate.innerText = smallDate;
+    </script>
+</body>
+
+</html>
