@@ -16,7 +16,22 @@
     color: $transparentColor;
     padding-left: $leftPadding;
     font-size: 30px;
+    @include flexCenter(row);
+    select {
+        margin-right: 15px;
+        background: darken($bgCalendarColor, 35%);
+        color: #fff;
+        border: 0;
+        width: 150px;
+        padding: 5px;
+        font-weight: 300;
+        font-size: 20px;
+        &:focus {
+            outline: 0;
+        }
+    }
 }
+
 #main-block__small-date:hover {
     color: #fff;
 }
@@ -32,6 +47,7 @@ body {
 
 .main-block__container {
     max-width: 1200px;
+    @include flexCenter(column);
 }
 
 .main-block__date-time {
@@ -51,6 +67,7 @@ body {
 
 .main-block__calendar-area {
     background: darken($bgCalendarColor, 35%);
+    margin-bottom: 20px;
 }
 .main-block__calendar {
     padding: 35px;
@@ -83,5 +100,34 @@ body {
     }
     &:hover {
         border: 4px solid $transparentColor;
+    }
+}
+#wholeYear {
+    background: $bgCalendarColor;
+    @include flexCenter(column);
+    flex-wrap: wrap;
+    max-height: 720px;
+    min-width: 100%;
+    padding: 20px 0;
+    .main-block__col-sm {
+        font-size: 12px;
+        width: 25px;
+        height: 20px;
+        .month-title {
+            margin-bottom: 20px; 
+            font-size: 20px;
+        }
+    }
+}
+#setMonthAndYear {
+    border: 0;
+    font-size: 20px;
+    padding: 10px;
+    color: #fff;
+    background: darken($bgCalendarColor, 35%);
+    border: 1px solid $transparentColor;
+    font-weight: 300;
+    &:focus {
+        outline: 0;
     }
 }
